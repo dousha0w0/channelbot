@@ -1,0 +1,5 @@
+source_guild_id: 0
+source_channel_id: 0
+target_guild_id: 0
+target_channel_id: 0
+token: "YOUR_BOT_TOKEN"
