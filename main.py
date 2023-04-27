@@ -15,25 +15,28 @@ def create_client(config):
 
     @client.event
     async def on_message(message):
-        source_guild_id = config['source_guild_id']
-        source_channel_id = config['source_channel_id']
-        target_guild_id = config['target_guild_id']
-        target_channel_id = config['target_channel_id']
+        for channel_mapping in config['channels']:
+            source_guild_id = channel_mapping['source_guild_id']
+            source_channel_id = channel_mapping['source_channel_id']
+            target_guild_id = channel_mapping['target_guild_id']
+            target_channel_id = channel_mapping['target_channel_id']
 
-        if message.guild.id == source_guild_id and message.channel.id == source_channel_id:
-            target_guild = client.get_guild(target_guild_id)
-            target_channel = target_guild.get_channel(target_channel_id)
-            content = message.content
+            if message.guild.id == source_guild_id and message.channel.id == source_channel_id:
+                target_guild = client.get_guild(target_guild_id)
+                target_channel = target_guild.get_channel(target_channel_id)
+                content = message.content
 
-            attachments = message.attachments
-            embeds = message.embeds
+                attachments = message.attachments
+                embeds = message.embeds
 
-            if content.strip() or attachments or embeds:
-                await target_channel.send(f"{message.author.name}#{message.author.discriminator}: {message.content}",
-                                          files=[await att.to_file() for att in message.attachments],
-                                          embeds=message.embeds)
-            else:
-                print("Empty message, not sending.")
+                if content.strip() or attachments or embeds:
+                    await target_channel.send(
+                        f"{message.author.name}#{message.author.discriminator}: {message.content}",
+                        files=[await att.to_file() for att in message.attachments],
+                        embeds=message.embeds)
+                else:
+                    print("Empty message, not sending.")
+                break
 
     return client
 
